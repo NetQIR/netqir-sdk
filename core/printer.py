@@ -1,5 +1,8 @@
 from PyNetQIR.quantum import Qubit
 from PyNetQIR.classical import Result
+from PyNetQIR.communication.utils import Rank, QCommTypes, ConditionalType
+from typing import Callable
+
 import sys
 
 
@@ -41,6 +44,7 @@ class Printer:
         gate_one(qubit)
         self.file.write("ELSE\n\t")
         gate_zero(qubit)
+        self.file.write("FI\n")
 
     def print_barrier(self):
         self.file.write("BARRIER\n")
@@ -50,6 +54,25 @@ class Printer:
 
     def print_blank_line(self):
         self.file.write("\n")
+
+    def print_conditional(self, comp_type: ConditionalType, rank_left: Rank,
+                          rank_right: Rank, lambda_true: Callable[[], None],
+                          lambda_false: Callable[[], None]):
+        self.file.write(f"IF {rank_left} {comp_type} {rank_right}\nTHEN\n\t")
+        lambda_true()
+        self.file.write("ELSE\n\t")
+        lambda_false()
+        self.file.write("FI\n")
+
+    def print_get_rank(self, rank):
+        self.file.write(f"{rank} = GET_RANK\n")
+
+    def print_get_size_world(self):
+        self.file.write("%size_world = GET_SIZE_WORLD\n")
+
+    def print_point_to_point_comm(self, operation: str, qubit: Qubit,
+                                  rank: Rank, comm_type: QCommTypes):
+        self.file.write(f"{operation}_{comm_type} {qubit} {rank}\n")
 
     def close(self):
         self.file.close()

@@ -5,6 +5,14 @@ from PyNetQIR.core import Printer
 
 
 class QuantumGate:
+    """
+    A class to represent various quantum gates and operations.
+
+    This class provides static methods to apply different quantum gates and operations
+    on qubits. It includes single-qubit gates, multi-qubit gates, parameterized gates,
+    and other quantum operations such as measurement and reset. The gates and operations
+    are translated to NetQIR using the Printer class.
+    """
     def __init__(self):
         pass
 
@@ -46,7 +54,7 @@ class QuantumGate:
     @staticmethod
     def CNOT(control: Qubit, target: Qubit):
         """Controlled-NOT (CNOT) gate"""
-        Printer.get_printer().print_two_qubit_gate("CNOT", control, target)
+        Printer.get_printer().print_two_qubit_gate("CX", control, target)
 
     @staticmethod
     def CZ(control: Qubit, target: Qubit):

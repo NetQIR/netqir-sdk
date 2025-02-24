@@ -4,9 +4,15 @@ from enum import Enum
 class QCommTypes(Enum):
     TELEDATA = 1
     TELEGATE = 2
+    ANY = 3
     
     def __str__(self):
-        return f"{"TELEDATA" if self == QCommTypes.TELEDATA else "TELEGATE"}"
+        if self == QCommTypes.TELEDATA:
+            return "teledata"
+        elif self == QCommTypes.TELEGATE:
+            return "telegate"
+        elif self == QCommTypes.ANY:
+            return ""
 
 
 class Rank:
@@ -23,7 +29,7 @@ class Rank:
         return False
 
     def __repr__(self):
-        return f"Rank({self.value})"
+        return f"%r{self.value}"
     
     @staticmethod
     def get_rank(rank):
@@ -34,12 +40,12 @@ class Rank:
 
 
 class ConditionalType(Enum):
-    EQUAL = "=",
-    NOT_EQUAL = "!=",
-    GREATER = ">",
-    GREATER_EQUAL = ">=",
-    LESS = "<",
-    LESS_EQUAL = "<="
+    EQUAL = "eq",
+    NOT_EQUAL = "ne",
+    GREATER = "gt",
+    GREATER_EQUAL = "ge",
+    LESS = "lt",
+    LESS_EQUAL = "le"
 
     def __str__(self):
         return self.value[0]

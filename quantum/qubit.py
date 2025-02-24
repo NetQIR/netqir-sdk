@@ -6,4 +6,4 @@ class Qubit:
         Qubit.total_qubits += 1
         
     def __repr__(self):
-        return f"Qubit(id={self.identifier})"
+        return f"%q{self.identifier}"

@@ -6,4 +6,4 @@ class Result:
         Result.total_results += 1
 
     def __repr__(self):
-        return f"Result(id={self.identifier})"
+        return f"%r{self.identifier}"

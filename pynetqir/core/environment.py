@@ -56,4 +56,6 @@ class Environment:
 
     def finalize(self):
         self.printer.close_function()
+        self.printer.print_blank_line()
+        self.printer.declarate_functions()
         self.printer.close()

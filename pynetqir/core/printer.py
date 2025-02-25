@@ -23,7 +23,7 @@ class Printer:
         self.file = sys.stdout
         self.pre_print = ""
         self._initialized = True
-        self.funtions_to_declare = []
+        self.funtions_to_declare = set()
 
     @staticmethod
     def get_printer():
@@ -49,6 +49,9 @@ class Printer:
         self.file.write(f"{self.pre_print}{str}")
 
     def __print_call(self, function: Function, return_register=""):
+        # Append call to the set of functions to declare
+        self.funtions_to_declare.add(function)
+
         pre = ""
         if return_register:
             pre = f"{return_register} = "
@@ -65,7 +68,7 @@ class Printer:
         self.pre_print = "\t\t"
 
         initialize = Function("__netqir__initialize", "void", [])
-        
+
         self.__print_call(initialize)
         self.print_blank_line()
 
@@ -193,6 +196,14 @@ class Printer:
         self.__print_call(finalize)
         self.pre_print = ""
         self.__print("}\n")
+
+    def declarate_functions(self):
+        # Order functions by name
+        self.funtions_to_declare = sorted(
+            self.funtions_to_declare, key=lambda x: x.name)
+
+        for function in self.funtions_to_declare:
+            self.__print(f"declare {function.print_without_parameter_name()};\n")
 
     def close(self):
         self.file.close()

@@ -1,6 +1,6 @@
-from PyNetQIR.quantum import Qubit
-from PyNetQIR.classical import Result, TemporalRegister
-from PyNetQIR.communication.utils import Rank, QCommTypes, ConditionalType
+from pynetqir.quantum import Qubit
+from pynetqir.classical import Result, TemporalRegister
+from pynetqir.communication.utils import Rank, QCommTypes, ConditionalType
 from typing import Callable
 
 import sys

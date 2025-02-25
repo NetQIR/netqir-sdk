@@ -1,8 +1,8 @@
 from typing import List
-from PyNetQIR.core import Printer
-from PyNetQIR.quantum import Qubit
-from PyNetQIR.classical import Result
-from PyNetQIR.communication.utils import Rank
+from pynetqir.core import Printer
+from pynetqir.quantum import Qubit
+from pynetqir.classical import Result
+from pynetqir.communication.utils import Rank
 
 
 class Environment:

@@ -1,7 +1,7 @@
 from typing import Callable
-from PyNetQIR.classical import Result
-from PyNetQIR.quantum import Qubit
-from PyNetQIR.core import Printer
+from pynetqir.classical import Result
+from pynetqir.quantum import Qubit
+from pynetqir.core import Printer
 
 
 class QuantumGate:

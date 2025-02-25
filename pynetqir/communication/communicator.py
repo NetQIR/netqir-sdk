@@ -1,7 +1,7 @@
 from enum import Enum
-from PyNetQIR.communication.utils import Rank, QCommTypes, ConditionalType
-from PyNetQIR.quantum import Qubit
-from PyNetQIR.core import Printer
+from pynetqir.communication.utils import Rank, QCommTypes, ConditionalType
+from pynetqir.quantum import Qubit
+from pynetqir.core import Printer
 from typing import Callable
 
 

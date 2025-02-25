@@ -1,6 +1,7 @@
 from pynetqir.quantum import Qubit
 from pynetqir.classical import Result, TemporalRegister
 from pynetqir.communication.utils import Rank, QCommTypes, ConditionalType
+from pynetqir.core.function import Function, Parameter
 from typing import Callable
 
 import sys
@@ -35,58 +36,91 @@ class Printer:
     @staticmethod
     def __result_datatype():
         return f"%{Result.__name__}*"
-    
+
     @staticmethod
     def __comm_datatype():
         return f"%Comm*"
 
+    @staticmethod
+    def __register_size_world():
+        return "%size_world"
+
     def __print(self, str):
         self.file.write(f"{self.pre_print}{str}")
 
-    def __print_call(self, str, return_type="void", return_register=""):
+    def __print_call(self, function: Function, return_register=""):
         pre = ""
         if return_register:
             pre = f"{return_register} = "
-        self.__print(f"{pre}call {return_type} @{str}\n")
+        self.__print(f"{pre}call {function};\n")
 
     def print_initialize(self):
         self.__print("%Qubit = type opaque\n"
                      "%Result = type opaque\n"
                      "%Comm = type opaque\n"
+                     f"{Printer.__register_size_world()} = alloca i32\n\n"
 
                      "define void @main(i32 noundef %0, ptr noundef %1) #0 {\n"
                      "\tentry:\n")
         self.pre_print = "\t\t"
 
+        initialize = Function("__netqir__initialize", "void", [])
+        
+        self.__print_call(initialize)
+        self.print_blank_line()
+
     def print_alloca(self, register, datatype):
-        self.__print(f"{register} = alloca %{datatype}\n")
+        self.__print(f"{register} = alloca %{datatype};\n")
 
     def print_single_gate(self, gate: str, qubit: Qubit):
-        self.__print_call(
-            f"__quantum__qis__{gate.lower()}__body({Printer.__qubit_datatype()} {qubit})"
-        )
+
+        single_gate = Function(f"__quantum__qis__{gate.lower()}__body", "void",
+                               [Parameter(qubit, Printer.__qubit_datatype())]
+                               )
+
+        self.__print_call(single_gate)
 
     def print_two_qubit_gate(self, gate: str, qubit1: Qubit, qubit2: Qubit):
-        self.__print_call(
-            f"__quantum__qis__{gate.lower()}__body({Printer.__qubit_datatype()} {qubit1}, {Printer.__qubit_datatype()} {qubit2})\n"
-        )
+
+        two_qubit_gate = Function(f"__quantum__qis__{gate.lower()}__body", "void",
+                                  [Parameter(qubit1, Printer.__qubit_datatype()),
+                                   Parameter(qubit2, Printer.__qubit_datatype())]
+                                  )
+
+        self.__print_call(two_qubit_gate)
 
     def print_measurement(self, qubit: Qubit, result: Result):
-        self.__print(
-            f"@__quantum__qis__mz__body({Printer.__qubit_datatype()} {qubit}, {Printer.__result_datatype()} {result})\n")
+        measurement = Function("__quantum__qis__mz__body", "void",
+                               [Parameter(qubit, Printer.__qubit_datatype()),
+                                Parameter(result, Printer.__result_datatype())]
+                               )
+        self.__print_call(measurement)
 
     def print_three_qubit_gate(self, gate: str, qubit1: Qubit, qubit2: Qubit, qubit3: Qubit):
-        self.__print_call(
-            f"__quantum__qis__{gate.lower()}__body({Printer.__qubit_datatype()} {qubit1}, {Printer.__qubit_datatype()} {qubit2}, {Printer.__qubit_datatype()} {qubit3}\n")
+
+        qubit_gate = Function(f"__quantum__qis__{gate.lower()}__body", "void",
+                              [Parameter(qubit1, Printer.__qubit_datatype()),
+                               Parameter(qubit2, Printer.__qubit_datatype()),
+                               Parameter(qubit3, Printer.__qubit_datatype())]
+                              )
+
+        self.__print_call(qubit_gate)
 
     def print_conditional_gate(self, gate_one, gate_zero, qubit: Qubit, result: Result):
-        self.print_conditional(ConditionalType.EQUAL, qubit, result, lambda: gate_one(qubit), lambda: gate_zero(qubit))
+        self.print_conditional(ConditionalType.EQUAL, qubit, result, lambda: gate_one(
+            qubit), lambda: gate_zero(qubit))
 
     def print_barrier(self):
-        self.__print_call("__quantum__qis__barrier__body()")
+        barrier = Function("__quantum__qis__barrier__body", "void", [])
+        self.__print_call(barrier)
 
     def print_param_gate(self, gate, param, qubit: Qubit):
-        self.__print(f"{gate} {param} {qubit}\n")
+        param_gate = Function(f"__quantum__qis__{gate.lower()}__body", "void",
+                              [Parameter(qubit, Printer.__qubit_datatype()),
+                               Parameter(param, "i32")]
+                              )
+
+        self.__print_call(param_gate)
 
     def print_blank_line(self):
         self.__print("\n")
@@ -98,43 +132,65 @@ class Printer:
         tmp_true = TemporalRegister("_true")
         tmp_false = TemporalRegister("_false")
         tmp_join = TemporalRegister("_continue")
-        
+
         # icmp instruction
-        self.__print(f"{tmp} = icmp {comp_type} i32 {rank_left}, {rank_right}\n")
-        
+        self.__print(
+            f"{tmp} = icmp {comp_type} i32 {rank_left}, {rank_right};\n")
+
         # branch instruction
-        self.__print(f"br i1 {tmp}, label {tmp_true}, label {tmp_false}\n")
+        self.__print(f"br i1 {tmp}, label {tmp_true}, label {tmp_false};\n")
 
         # return \t for the next instructions
         self.pre_print = self.pre_print[:-1]
         self.__print(f"{tmp_true}:\n")
         self.pre_print += "\t"
         lambda_true()
-        self.__print(f"br label {tmp_join}\n")
+        self.__print(f"br label {tmp_join};\n")
         self.pre_print = self.pre_print[:-1]
         self.__print(f"{tmp_false}:\n")
         self.pre_print += "\t"
         lambda_false()
-        self.__print(f"br label {tmp_join}\n")
+        self.__print(f"br label {tmp_join};\n")
         self.pre_print = self.pre_print[:-1]
 
         self.__print(f"{tmp_join}:\n")
         self.pre_print += "\t"
 
     def print_get_rank(self, rank):
-        self.__print_call(f"__netqir__comm_rank({Printer.__comm_datatype()} @netqir_comm_world, ptr {rank})", "i32")
+        comm_rank = Function("__netqir__comm_rank", "i32",
+                             [Parameter("@netqir_comm_world",
+                                        Printer.__comm_datatype()),
+
+                              Parameter(rank, "ptr")
+                              ]
+                             )
+        self.__print_call(comm_rank)
 
     def print_get_size_world(self):
-        self.__print_call(f"__netqir__comm_size({Printer.__comm_datatype()} @netqir_comm_world)", "i32", "%size_world")
+        comm_size_world = Function("__netqir__comm_size", "i32",
+                                   [Parameter("@netqir_comm_world",
+                                              Printer.__comm_datatype()),
+
+                                       Parameter(
+                                           Printer.__register_size_world(), "ptr")
+                                    ]
+                                   )
+        self.__print_call(comm_size_world)
 
     def print_point_to_point_comm(self, operation: str, qubit: Qubit,
                                   rank: Rank, comm_type: QCommTypes):
         separation = '_' if comm_type != QCommTypes.ANY else ''
-        self.__print_call(
-            f"__netqir__{operation}{separation}{comm_type}({Printer.__qubit_datatype()} {qubit}, i32 {rank})", "i32")
+
+        point_to_point = Function(f"__netqir__{operation}{separation}{comm_type}", "i32",
+                                  [Parameter(qubit, Printer.__qubit_datatype()),
+                                   Parameter(rank, "i32")]
+                                  )
+
+        self.__print_call(point_to_point)
 
     def close_function(self):
-        self.__print_call("__netqir__finalize()")
+        finalize = Function("__netqir__finalize", "void", [])
+        self.__print_call(finalize)
         self.pre_print = ""
         self.__print("}\n")
 

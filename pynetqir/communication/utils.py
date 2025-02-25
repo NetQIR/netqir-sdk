@@ -29,7 +29,7 @@ class Rank:
         return False
 
     def __repr__(self):
-        return f"%r{self.value}"
+        return f"%rk{self.value}"
     
     @staticmethod
     def get_rank(rank):

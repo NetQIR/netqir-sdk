@@ -1,2 +1,2 @@
 from .result import Result
-from .temp import TemporalRegister
+from ..core.temp import TemporalRegister

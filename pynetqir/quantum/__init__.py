@@ -1,1 +1,1 @@
-from .qubit import Qubit
+from .gates import QuantumGate

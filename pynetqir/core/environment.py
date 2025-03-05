@@ -1,8 +1,6 @@
 from typing import List
-from pynetqir.core import Printer
-from pynetqir.quantum import Qubit
-from pynetqir.classical import Result
-from pynetqir.communication.utils import Rank
+from pynetqir.core.traslation import Printer
+from pynetqir.datatypes.qir import Qubit, Result
 
 
 class Environment:

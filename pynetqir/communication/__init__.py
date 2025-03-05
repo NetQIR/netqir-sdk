@@ -1,1 +1,1 @@
-from .utils import Rank, QCommTypes
+from .communicator import Communicator

@@ -1,6 +1,6 @@
-from pynetqir.quantum import Qubit
-from pynetqir.classical import Result, TemporalRegister
-from pynetqir.communication.utils import Rank, QCommTypes, ConditionalType
+from pynetqir.datatypes import TemporalRegister
+from pynetqir.datatypes.qir import Qubit, Result
+from pynetqir.datatypes.netqir import Rank, QCommTypes, ConditionalType
 from pynetqir.core.function import Function, Parameter
 from typing import Callable
 

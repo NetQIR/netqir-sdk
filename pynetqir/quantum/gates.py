@@ -1,7 +1,6 @@
 from typing import Callable
-from pynetqir.classical import Result
-from pynetqir.quantum import Qubit
-from pynetqir.core import Printer
+from pynetqir.datatypes.qir import Result, Qubit
+from pynetqir.core.traslation import Printer
 
 
 class QuantumGate:

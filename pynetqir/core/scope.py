@@ -1,4 +1,7 @@
-class Scope:
+from pynetqir.core import Operation
+from queue import Queue
+
+class Scope(Operation):
 
     def __init__(self):
 
@@ -16,12 +19,18 @@ class Scope:
         
         # List of the children of the current Scope object
         self.__children = []
+
+        # Queue of operations to be executed
+        self.__operations = Queue()
     
     def __get_id(self):
         return f'G{self.__generation}.C{self.__children_id}'
 
     def __add_child(self, child: 'Scope'):
         self.__children.append(child)
+
+    def __add_operation(self, operation: Operation):
+        self.__operations.put(operation)
 
     def __str__(self):
         return self.__get_id()
@@ -33,3 +42,10 @@ class Scope:
         child.__children_id = len(self.__children)
         self.__add_child(child)
         return child
+    
+    # Overriding the execute() method from Operation
+    def execute(self):
+        while not self.__operations.empty():
+            operation = self.__operations.get()
+            operation: Operation
+            operation.execute()

@@ -1,2 +1,2 @@
 from .rank import Rank
-from .enum_types import QCommTypes, ConditionalType
+from .enum_types import QCommTypes

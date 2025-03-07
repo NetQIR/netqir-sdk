@@ -1,7 +1,4 @@
-from pynetqir.core import Environment
-from pynetqir.quantum.gates import QuantumGate
-from pynetqir.communication.communicator import Communicator
-from pynetqir.datatypes.netqir import QCommTypes, Rank, ConditionalType
+from pynetqir.core import Program, Environment
 
 # Initialize the quantum environment with a name and the number of qubits and classical bits
 env = Environment("teleport", 2, 1)

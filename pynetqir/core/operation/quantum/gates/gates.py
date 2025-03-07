@@ -1,9 +1,13 @@
 from typing import Callable
+
+from pynetqir.core.operation.quantum.gates import MeasurementGateOperation, ResetGateOperation
+from pynetqir.core.operation.quantum.gates.gate import SingleGateOperation, ControlledGateOperation, \
+    ParameterizedGateOperation
 from pynetqir.datatypes.qir import Result, Qubit
 from pynetqir.core.traslation import Printer
 
 
-class QuantumGate:
+class QuantumGates:
     """
     A class to represent various quantum gates and operations.
 
@@ -18,97 +22,92 @@ class QuantumGate:
     @staticmethod
     def I(qubit: Qubit):
         """Identity gate"""
-        Printer.get_printer().print_single_gate("I", qubit)
+        return SingleGateOperation("I", qubit)
 
     @staticmethod
     def X(qubit: Qubit):
         """Pauli-X (NOT) gate"""
-        Printer.get_printer().print_single_gate("X", qubit)
+        return SingleGateOperation("X", qubit)
 
     @staticmethod
     def Y(qubit: Qubit):
         """Pauli-Y gate"""
-        Printer.get_printer().print_single_gate("Y", qubit)
+        return SingleGateOperation("Y", qubit)
 
     @staticmethod
     def Z(qubit: Qubit):
         """Pauli-Z gate"""
-        Printer.get_printer().print_single_gate("Z", qubit)
+        return SingleGateOperation("Z", qubit)
 
     @staticmethod
     def H(qubit: Qubit):
         """Hadamard gate"""
-        Printer.get_printer().print_single_gate("H", qubit)
+        return SingleGateOperation("H", qubit)
 
     @staticmethod
     def S(qubit: Qubit):
         """Phase gate"""
-        Printer.get_printer().print_single_gate("S", qubit)
+        return SingleGateOperation("S", qubit)
 
     @staticmethod
     def T(qubit: Qubit):
         """T gate (π/8 gate)"""
-        Printer.get_printer().print_single_gate("T", qubit)
+        return SingleGateOperation("T", qubit)
 
     @staticmethod
     def CNOT(control: Qubit, target: Qubit):
         """Controlled-NOT (CNOT) gate"""
-        Printer.get_printer().print_two_qubit_gate("CX", control, target)
+        return ControlledGateOperation("CNOT", [control], [target])
 
     @staticmethod
     def CZ(control: Qubit, target: Qubit):
         """Controlled-Z gate"""
-        Printer.get_printer().print_two_qubit_gate("CZ", control, target)
+        return ControlledGateOperation("CZ", [control], [target])
 
     @staticmethod
     def SWAP(control: Qubit, target: Qubit):
         """SWAP gate"""
-        Printer.get_printer().print_two_qubit_gate("SWAP", control, target)
+        return ControlledGateOperation("SWAP", [control], [target])
 
     @staticmethod
     def RX(theta, qubit: Qubit):
         """Rotation around X-axis"""
-        Printer.get_printer().print_param_gate("RX", theta, qubit)
+        return ParameterizedGateOperation("RX", qubit, [theta])
 
     @staticmethod
     def RY(theta, qubit: Qubit):
         """Rotation around Y-axis"""
-        Printer.get_printer().print_param_gate("RY", theta, qubit)
+        return ParameterizedGateOperation("RY", qubit, [theta])
 
     @staticmethod
     def RZ(theta, qubit: Qubit):
         """Rotation around Z-axis"""
-        Printer.get_printer().print_param_gate("RZ", theta, qubit)
-
-    @staticmethod
-    def barrier():
-        """Barrier gate"""
-        Printer.get_printer().print_barrier()
+        return ParameterizedGateOperation("RZ", qubit, [theta])
 
     @staticmethod
     def ccx(control1: Qubit, control2: Qubit, target: Qubit):
         """Toffoli (CCX) gate"""
-        Printer.get_printer().print_three_qubit_gate("CCX", control1, control2, target)
+        return ControlledGateOperation("CCX", [control1, control2], [target])
 
     @staticmethod
     def mz(qubit: Qubit, result: Result):
         """Measurement in Z basis"""
-        return Printer.get_printer().print_measurement(qubit, result)
+        return MeasurementGateOperation(qubit, result)
 
     @staticmethod
     def reset(qubit: Qubit):
         """Reset gate"""
-        Printer.get_printer().print_single_gate("RESET", qubit)
+        return ResetGateOperation(qubit)
 
     @staticmethod
     def s_adj(qubit: Qubit):
         """Adjoint of Phase gate"""
-        Printer.get_printer().print_single_gate("S_ADJ", qubit)
+        return SingleGateOperation("S_ADJ", qubit)
 
     @staticmethod
     def t_adj(qubit: Qubit):
         """Adjoint of T gate"""
-        Printer.get_printer().print_single_gate("T_ADJ", qubit)
+        return SingleGateOperation("T_ADJ", qubit)
 
     @staticmethod
     def if_result(cond, qubit: Qubit,

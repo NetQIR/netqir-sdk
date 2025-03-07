@@ -1,1 +1,1 @@
-from .temp_register import TemporalRegister
+from .register import Register, TemporalRegister

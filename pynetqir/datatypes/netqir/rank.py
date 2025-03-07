@@ -1,8 +1,12 @@
-class Rank:
+from pynetqir.datatypes import Register
+
+
+class Rank(Register):
 
     total_ranks = 0
 
     def __init__(self):
+        super().__init__()
         self.value = Rank.total_ranks
         Rank.total_ranks += 1
 
@@ -19,4 +23,7 @@ class Rank:
         r = Rank()
         Rank.total_ranks -= 1
         r.value = rank
-        return r 
+        return r
+
+    def datatype(self) -> str:
+        return f"i32"

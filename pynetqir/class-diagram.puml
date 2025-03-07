@@ -1,0 +1,75 @@
+@startuml
+
+'https://plantuml.com/class-diagram
+
+class Parameter {
+    + name
+    + type
+}
+
+interface Operation {
+    + execute()
+}
+
+
+
+class Function {
+    + name
+    + return_type
+    + execute()
+}
+
+
+
+abstract class Scope {
+    + generation
+    + children_id
+    + create_scope_child()
+    + execute()
+}
+
+class Qubit {
+    + id
+}
+
+abstract class Gate {
+    + name
+    + execute()
+}
+
+class SingleGate {
+    + name
+    + execute()
+}
+
+class ControlledGate {
+    + name
+    + execute()
+}
+
+class MultipleGate {
+    + name
+    + execute()
+}
+
+class ConditionalOperation
+
+Operation <|.. ConditionalOperation
+Operation <|.. Gate
+Operation <|.. Scope
+Operation <|.. Function
+Gate <|-- SingleGate
+Gate <|-- ControlledGate
+Gate <|-- MultipleGate
+
+SingleGate --> "1" Qubit
+MultipleGate --> "*" Qubit
+ControlledGate --> "*" Qubit
+
+Scope "1" -- "0..*" Scope
+Scope --> "*" Operation
+
+Function --> "*" Parameter
+
+
+@enduml

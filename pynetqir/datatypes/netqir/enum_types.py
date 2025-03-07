@@ -12,14 +12,3 @@ class QCommTypes(Enum):
             return "telegate"
         elif self == QCommTypes.ANY:
             return ""
-
-class ConditionalType(Enum):
-    EQUAL = "eq",
-    NOT_EQUAL = "ne",
-    GREATER = "gt",
-    GREATER_EQUAL = "ge",
-    LESS = "lt",
-    LESS_EQUAL = "le"
-
-    def __str__(self):
-        return self.value[0]

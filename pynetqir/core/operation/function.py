@@ -1,4 +1,6 @@
 from typing import List
+from pynetqir.core.operation import Operation
+from pynetqir.core.traslation import Executor
 
 
 class Parameter:
@@ -10,7 +12,7 @@ class Parameter:
         return f"{self.type} {self.name}"
 
 
-class Function:
+class Function(Operation):
     def __init__(self, name, return_type, parameters: List[Parameter]):
         self.name = name
         self.return_type = return_type

@@ -41,11 +41,7 @@ class Scope(Operation):
         child.__generation = self.__generation + 1
         child.__children_id = len(self.__children)
         self.__add_child(child)
+
+        # Append the Scope object to the list of operations to be executed
+        self.__add_operation(child)
         return child
-    
-    # Overriding the execute() method from Operation
-    def execute(self):
-        while not self.__operations.empty():
-            operation = self.__operations.get()
-            operation: Operation
-            operation.execute()

@@ -1,7 +1,5 @@
 from abc import ABC, abstractmethod
+from pynetqir.core.traslation import Executor
 
 class Operation(ABC):
-
-    @abstractmethod
-    def execute(self):
-        pass
+    pass

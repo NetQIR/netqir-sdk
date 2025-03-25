@@ -11,4 +11,4 @@ class ICMPOperation(Operation):
         self.return_register = return_register
 
     def __str__(self):
-        return f"{self.return_register} = icmp {self.icmp_type} i32 {self.left}, {self.right}"
+        return f"{self.return_register} = icmp {self.comparision} i32 {self.left}, {self.right}"

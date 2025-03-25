@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from python.pynetqir.core.operation import Function, Parameter, ConditionalOperator
+from python.pynetqir.core.operation import Function, Parameter, ConditionalOperator, Operation
 from python.pynetqir.core.operation.conditional import ConditionalType
 from python.pynetqir.datatypes.qir import Qubit, Result
 from python.pynetqir.datatypes.register import InmediateRegister
@@ -54,7 +54,7 @@ class ResetGateOperation(GateOperation):
         self.__qubit = qubit
 
 
-class ClassicalControlledGateOperation:
+class ClassicalControlledGateOperation(Operation):
     def __init__(self, result: Result, gate: GateOperation):
         self.conditional_operation = ConditionalOperator(ConditionalType.EQUAL, result, InmediateRegister(1), [gate],
                                                          [])

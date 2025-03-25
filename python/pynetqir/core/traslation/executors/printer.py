@@ -1,6 +1,8 @@
 from python.pynetqir.core.operation import Operation, ConditionalOperator
 from python.pynetqir.core.operation.assembly import AllocateOperation, ICMPOperation, UnconditionalBranchOperation, \
     ConditionalBranchOperation
+from python.pynetqir.core.operation.assembly.br import TagMarkerOperation
+from python.pynetqir.core.operation.quantum.gates import *
 from python.pynetqir.core.operation.scope import FunctionScope, Scope
 from python.pynetqir.core.operation.utils import DatatypeDeclarationOperation
 from python.pynetqir.core.traslation import Executor
@@ -17,7 +19,7 @@ class PrinterExecutor(Executor):
         self.__stream = stream
         self.__indentations = 0
 
-    def print(self, message, endline = "\n"):
+    def print(self, message, endline="\n"):
         self.__stream.write("\t" * self.__indentations)
         self.__stream.write(message)
         self.__stream.write(endline)
@@ -47,19 +49,24 @@ class PrinterExecutor(Executor):
         self.run_qir_gate(operator)
 
     def run_conditional_branch_operation(self, operator: ConditionalBranchOperation):
-        pass
+        self.print(f"br i1 {operator.condition}, label {operator.true_label}, label {operator.false_label};")
 
     def run_unconditional_branch_operation(self, operator: UnconditionalBranchOperation):
-        pass
+        self.print(f"br label {operator.label};")
 
     def run_icmp_operation(self, operator: ICMPOperation):
-        pass
+        self.print(f"{operator.return_register} = icmp {operator.comparision} i32 {operator.left}, {operator.right};")
 
     def run_allocate_operation(self, operator: AllocateOperation):
         self.print(f"{operator.register} = alloca {operator.datatype};")
 
     def run_classical_controlled_gate(self, operator: ClassicalControlledGateOperation):
         self.run_conditional_operator(operator.conditional_operation)
+
+    def run_tag_marker_operation(self, operator: TagMarkerOperation):
+        self.__remove_indentation()
+        self.print(f"{operator.tag}: ")
+        self.__increment_indentation()
 
     def run_conditional_operator(self, operator: ConditionalOperator):
         tmp = TemporalRegister()
@@ -103,7 +110,7 @@ class PrinterExecutor(Executor):
         self.run_function(operator, prename="__quantum__qis__", postname="__body")
 
     @staticmethod
-    def __function_name(operator: Function, prename = "", postname = "", with_register = True):
+    def __function_name(operator: Function, prename="", postname="", with_register=True):
         msg = f"{operator.return_type} @{prename}{operator.name.lower()}{postname}("
         for i, parameter in enumerate(operator.parameters):
             if i > 0:
@@ -114,7 +121,7 @@ class PrinterExecutor(Executor):
 
         return msg
 
-    def run_function(self, operator: Function, prename = "", postname = ""):
+    def run_function(self, operator: Function, prename="", postname=""):
         name = PrinterExecutor.__function_name(operator, prename, postname)
 
         if operator.return_register is not None:
@@ -150,7 +157,8 @@ class PrinterExecutor(Executor):
         if isinstance(operator.function, GateOperation):
             prename = "__quantum__qis__"
             postname = "__body"
-        self.print(f"declare {PrinterExecutor.__function_name(operator.function, prename, postname, with_register=False)};")
+        self.print(
+            f"declare {PrinterExecutor.__function_name(operator.function, prename, postname, with_register=False)};")
 
     def run(self, operator: Operation):
         super().run(operator)

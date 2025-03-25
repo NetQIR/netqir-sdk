@@ -11,3 +11,8 @@ class Result(Register):
 
     def __repr__(self):
         return f"%r{self.identifier}"
+
+    @staticmethod
+    def datatype_default() -> str:
+        return f"%{__class__.__name__}*"
+

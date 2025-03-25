@@ -1,10 +1,12 @@
 from abc import ABC, abstractmethod
 from typing import Set
 
-from python.pynetqir.core.operation import Operation, Function, ConditionalOperator
+from python.pynetqir.core.operation import Operation
 from python.pynetqir.core.operation.assembly import AllocateOperation, ICMPOperation, UnconditionalBranchOperation, \
     ConditionalBranchOperation
+from python.pynetqir.core.operation.assembly.br import TagMarkerOperation
 from python.pynetqir.core.operation.function import DeclarationFunction
+from python.pynetqir.core.operation.quantum.gates import *
 from python.pynetqir.core.operation.scope import Scope, FunctionScope
 from python.pynetqir.core.operation.utils import DatatypeDeclarationOperation
 
@@ -27,6 +29,7 @@ class Executor(ABC):
             ICMPOperation: self.run_icmp_operation,
             UnconditionalBranchOperation: self.run_unconditional_branch_operation,
             ConditionalBranchOperation: self.run_conditional_branch_operation,
+            TagMarkerOperation: self.run_tag_marker_operation,
             DeclarationFunction: self.run_declaration_function,
             Function: self.run_function,
             FunctionScope: self.run_function_scope,
@@ -59,6 +62,10 @@ class Executor(ABC):
 
     @abstractmethod
     def run_controlled_qubit_gate(self, operator: ControlledGateOperation):
+        pass
+
+    @abstractmethod
+    def run_tag_marker_operation(self, operator: TagMarkerOperation):
         pass
 
     @abstractmethod

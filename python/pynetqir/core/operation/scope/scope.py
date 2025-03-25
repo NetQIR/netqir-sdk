@@ -5,7 +5,7 @@ from python.pynetqir.core.operation import Operation
 
 class Scope(Operation):
 
-    def __init__(self, parent = None):
+    def __init__(self, parent = None, operations=None):
 
         # Father is the parent Scope object of this current Scope object
         self.__father = parent
@@ -23,7 +23,10 @@ class Scope(Operation):
         self.__children = []
 
         # Queue of operations to be executed
-        self.__operations = list()
+        self.__operations = operations
+
+        if operations is None:
+            self.__operations = list()
 
         if parent is not None:
             parent.append_child(self)

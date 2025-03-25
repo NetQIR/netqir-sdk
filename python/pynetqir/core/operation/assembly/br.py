@@ -19,3 +19,11 @@ class ConditionalBranchOperation(Operation):
 
     def __str__(self):
         return f"br i1 {self.condition}, label {self.true_label}, label {self.false_label}"
+
+class TagMarkerOperation(Operation):
+    def __init__(self, tag: str):
+        super().__init__()
+        self.tag = tag
+
+    def __str__(self):
+        return f"{self.tag}:"

@@ -1,9 +1,10 @@
 from python.pynetqir.core.operation.assembly import AllocateOperation
-from python.pynetqir.core.operation.function import DeclarationFunction
-from python.pynetqir.core.operation.scope import Scope
+from python.pynetqir.core.operation.function import DeclarationFunction, Function
+from python.pynetqir.core.operation.scope import Scope, FunctionScope
 from python.pynetqir.core.operation.utils import DatatypeDeclarationOperation
 from python.pynetqir.core.traslation import Executor
 from python.pynetqir.core.traslation.executors import PrinterExecutor
+from python.pynetqir.datatypes.netqir.communicator import CommunicatorRegister, NamedCommunicatorRegister
 from python.pynetqir.datatypes.qir import Qubit, Result
 from python.pynetqir.datatypes.register import NamedRegister
 
@@ -21,15 +22,19 @@ class Program:
         self.global_scope = Scope()
         self.executor = executor
         self.size_world_register = NamedRegister("size_world")
+        self.comm_world = NamedCommunicatorRegister("netqir_comm_world")
 
         if self.executor is None:
             self.executor = PrinterExecutor()
 
-    def get_global_scope(self):
+    def get_global_scope(self) -> 'Scope':
         return self.global_scope
 
     def get_size_world_register(self):
         return self.size_world_register
+
+    def get_comm_world(self) -> CommunicatorRegister:
+        return self.comm_world
 
     @staticmethod
     def get_instance():

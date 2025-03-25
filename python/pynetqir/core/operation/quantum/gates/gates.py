@@ -26,9 +26,9 @@ class QuantumGates:
     def __init__(self):
         pass
 
-    single_gates = {"I", "X", "Y", "Z", "H", "S", "T", "S_ADJ", "T_ADJ"}
-    controlled_gates = {"CNOT", "CZ", "SWAP", "CCX"}
-    parameterized_gates = {"RX", "RY", "RZ"}
+    single_gates = {"i", "x", "y", "z", "h", "s", "t", "s_adj", "t_adj"}
+    controlled_gates = {"cx", "cz", "swap"}
+    parameterized_gates = {"rx", "ry", "rz"}
 
     @staticmethod
     def generate_gate_method(gate_name, type: GateType):
@@ -84,80 +84,3 @@ for gate in QuantumGates.controlled_gates:
 
 for gate in QuantumGates.parameterized_gates:
     setattr(QuantumGates, gate, QuantumGates.generate_gate_method(gate, GateType.PARAMETERIZED_GATE))
-
-    # @staticmethod
-    # def I(qubit: Qubit):
-    #     """Identity gate"""
-    #     return SingleGateOperation("I", qubit)
-    #
-    # @staticmethod
-    # def X(qubit: Qubit):
-    #     """Pauli-X (NOT) gate"""
-    #     return SingleGateOperation("X", qubit)
-    #
-    # @staticmethod
-    # def Y(qubit: Qubit):
-    #     """Pauli-Y gate"""
-    #     return SingleGateOperation("Y", qubit)
-    #
-    # @staticmethod
-    # def Z(qubit: Qubit):
-    #     """Pauli-Z gate"""
-    #     return SingleGateOperation("Z", qubit)
-    #
-    # @staticmethod
-    # def H(qubit: Qubit):
-    #     """Hadamard gate"""
-    #     return SingleGateOperation("H", qubit)
-    #
-    # @staticmethod
-    # def S(qubit: Qubit):
-    #     """Phase gate"""
-    #     return SingleGateOperation("S", qubit)
-    #
-    # @staticmethod
-    # def T(qubit: Qubit):
-    #     """T gate (π/8 gate)"""
-    #     return SingleGateOperation("T", qubit)
-    #
-    #
-    # @staticmethod
-    # def CNOT(control: Qubit, target: Qubit):
-    #     """Controlled-NOT (CNOT) gate"""
-    #     return ControlledGateOperation("CNOT", [control], [target])
-    #
-    # @staticmethod
-    # def CZ(control: Qubit, target: Qubit):
-    #     """Controlled-Z gate"""
-    #     return ControlledGateOperation("CZ", [control], [target])
-    #
-    # @staticmethod
-    # def SWAP(control: Qubit, target: Qubit):
-    #     """SWAP gate"""
-    #     return ControlledGateOperation("SWAP", [control], [target])
-    #
-    #
-    # @staticmethod
-    # def RX(theta, qubit: Qubit):
-    #     """Rotation around X-axis"""
-    #     return ParameterizedGateOperation("RX", qubit, [theta])
-    #
-    # @staticmethod
-    # def RY(theta, qubit: Qubit):
-    #     """Rotation around Y-axis"""
-    #     return ParameterizedGateOperation("RY", qubit, [theta])
-    #
-    # @staticmethod
-    # def RZ(theta, qubit: Qubit):
-    #     """Rotation around Z-axis"""
-    #     return ParameterizedGateOperation("RZ", qubit, [theta])
-
-    # @staticmethod
-    # def s_adj(qubit: Qubit):
-    #     """Adjoint of Phase gate"""
-    #     return SingleGateOperation("S_ADJ", qubit)
-    #
-    # @staticmethod
-    # def t_adj(qubit: Qubit):
-    #     """Adjoint of T gate"""
-    #     return SingleGateOperation("T_ADJ", qubit)

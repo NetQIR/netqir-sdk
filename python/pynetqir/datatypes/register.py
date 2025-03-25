@@ -12,6 +12,10 @@ class Register:
     def datatype(self) -> str:
         return f"%{self.__class__.__name__}*"
 
+    @staticmethod
+    def datatype_default() -> str:
+        return f"%{__class__.__name__}*"
+
 class TemporalRegister(Register):
     total_temporal_registers = 0
 

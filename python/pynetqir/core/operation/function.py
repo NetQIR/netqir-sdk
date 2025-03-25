@@ -7,6 +7,7 @@ class Parameter:
     def __init__(self, name : str = "", type : str = "", register : Register = None):
         self.name = name
         self.type = type
+        self.register = register
 
         if register is not None:
             self.name = register.__repr__()

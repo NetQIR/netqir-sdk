@@ -8,10 +8,6 @@ class CommunicatorRegister(Register):
         self.identifier = CommunicatorRegister.total_communicators
         CommunicatorRegister.total_communicators += 1
 
-    @staticmethod
-    def get_comm_world():
-        return NamedCommunicatorRegister("netqir_comm_world")
-
     def __repr__(self):
         return f"%cm{self.identifier}"
 
